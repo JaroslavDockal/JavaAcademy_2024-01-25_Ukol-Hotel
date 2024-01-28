@@ -55,7 +55,7 @@ public class Booking {
         this.checkOutDate = currentDate.plusDays(6);
         this.typeOfStay = TypeOfStay.PRIVATE;
     }
-/*
+
     public Booking getBooking() {
         Booking booking = new Booking();
         booking.setBookingNo(bookingNo);
@@ -67,7 +67,7 @@ public class Booking {
 
         return booking;
     }
-*/
+
     @Override public String toString() {
         return "Rezervace č. " + bookingNo + ", " + checkInDate.format(DateTimeFormatter.ofPattern("d.M.y")) + " - " + checkOutDate.format(DateTimeFormatter.ofPattern("d.M.y")) + ", " + guest.toString() +", " + room.toString();
     }

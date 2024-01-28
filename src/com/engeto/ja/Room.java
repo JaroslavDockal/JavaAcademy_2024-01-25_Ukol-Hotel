@@ -1,7 +1,6 @@
 package com.engeto.ja;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 public class Room {
     private int roomNo;
