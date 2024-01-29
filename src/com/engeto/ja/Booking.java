@@ -37,7 +37,7 @@ public class Booking {
         this.typeOfStay = typeOfStay;
     }
 
-    public Booking(int bookingNo, Guest guest, Room room, LocalDate checkInDate, LocalDate checkOutDate, TypeOfStay typeOfStay) {
+    public void setBooking(int bookingNo, Guest guest, Room room, LocalDate checkInDate, LocalDate checkOutDate, TypeOfStay typeOfStay) {
         this.bookingNo = bookingNo;
         this.guest = guest;
         this.room = room;
