@@ -41,10 +41,15 @@ public class Main {
         List<Booking> bookings = new ArrayList<>();
         List<Guest> guests = new ArrayList<>();
 
-        createBooking(rooms,bookings,guests,1,"Adéla","Malíková",LocalDate.of(1993, 3, 13),LocalDate.of(2024, 7, 19), LocalDate.of(2024, 7, 26), TypeOfStay.BUSINESS);
+        createBooking(rooms,bookings,guests,1,"Adéla","Malíková",LocalDate.of(1993, 3, 13),
+                LocalDate.of(2024, 7, 19), LocalDate.of(2024, 7, 26), TypeOfStay.BUSINESS);
+
         createBooking(rooms,bookings,guests,7,"Jan","Dvořáček",LocalDate.of(1995, 5, 5));
-        createBooking(rooms,bookings,guests,3,"Adéla","Malíková",LocalDate.of(1993, 3, 13));
-        createBooking(rooms,bookings,guests,6,"Jan","Novák",LocalDate.of(1988, 7, 22),LocalDate.of(2024, Month.FEBRUARY,29),LocalDate.of(2024,Month.MARCH,3),TypeOfStay.BUSINESS);
+        createBooking(rooms,bookings,guests,7,"Adéla","Malíková",LocalDate.of(1993, 3, 13));
+
+        createBooking(rooms,bookings,guests,6,"Jan","Novák",LocalDate.of(1988, 7, 22),
+                LocalDate.of(2024, Month.FEBRUARY,29),LocalDate.of(2024,Month.MARCH,3),TypeOfStay.BUSINESS);
+
         createBooking(rooms,bookings,guests,12,"Josef","Vyskočil",LocalDate.of(1944, 7, 22));
 
         divide();
@@ -107,7 +112,7 @@ public class Main {
         rooms.add(room10);
 
         divide();
-
+        System.out.println("Seznam dostupných pokojů: ");
         for (Room room : rooms) {
             System.out.println(room.toString());
         }
@@ -147,13 +152,34 @@ public class Main {
     private static boolean guestExists(List<Guest> guests, Guest newGuest) {
         for (Guest guest : guests) {
             if (newGuest.getName().equals(guest.getName()) &&
-                    newGuest.getSurname().equals(guest.getSurname()) &&
-                    newGuest.getDateOfBirth().equals(guest.getDateOfBirth())) {
+                newGuest.getSurname().equals(guest.getSurname()) &&
+                newGuest.getDateOfBirth().equals(guest.getDateOfBirth())) {
                 return true;
             }
         }
-        return false; // Host neexistuje v seznamu
+        return false;
     }
+
+    private static int bookingExists(List<Booking> bookings, Room room, LocalDate checkInDate, LocalDate checkOutDate) {
+        for (Booking booking : bookings) {
+            if (room.getRoomNo() == booking.getRoom().getRoomNo() &&
+                    checkInDate.equals(booking.getCheckInDate()) &&
+                    checkOutDate.equals(booking.getCheckOutDate())) {
+                return booking.getBookingNo();
+            }
+        }
+        return 0;
+    }
+
+    private static Booking findBookingByNumber(List<Booking> bookings, int bookingNumber) {
+        for (Booking booking : bookings) {
+            if (booking.getBookingNo() == bookingNumber) {
+                return booking;
+            }
+        }
+        return null;
+    }
+
     private static void divide() {
         System.out.println("--------------------------------------------------------------------------------------");
     }
@@ -167,21 +193,32 @@ public class Main {
         Guest guest = new Guest();
         guest.setGuest(name, surname, dateOfBirth);
         if (!guestExists(guests, guest)) {
-            // Přidání nového hosta do seznamu
             guests.add(guest);
         }
         Room selectedRoom = findRoomByNumber(rooms, roomNo);
+        System.out.println("Vytvářím rezervaci: Pokoj č. " + roomNo + " pro hosta " + guest.getFullName());
         System.out.println(roomIsValidMsg(selectedRoom, roomNo));
         int highestBookingNo = 0;
         for (Booking existingBooking : bookings) {
             highestBookingNo = Math.max(existingBooking.getBookingNo(), highestBookingNo);
         }
         if (roomIsValid(selectedRoom)) {
+            int existingBookingNo = bookingExists(bookings, selectedRoom, checkInDate, checkOutDate );
+            if(existingBookingNo!=0){
+                booking.setBooking(existingBookingNo, guest, selectedRoom);
+                if(selectedRoom.getNoOfBeds()>1){
+                    bookings.add(booking);
+                    System.out.println("Do rezervace úspěšně přidán další host.");
+                } else {
+                    System.out.println("Na požadovaném pokoji není volná postel - rezervace odmítnuta.");
+                }
+            } else {
             booking.setBooking(highestBookingNo + 1, guest, selectedRoom, checkInDate, checkOutDate, typeOfStay);
             bookings.add(booking);
             System.out.println("Rezervace úspěšně vytvořena.");
+            }
         } else {
-            System.out.println("Rezervace nevytvořena - " + guest.getFullName() + "spí venku!");
+            System.out.println("Rezervace nevytvořena - " + guest.getName() + "spí venku!");
         }
     }
 
@@ -194,17 +231,29 @@ public class Main {
             guests.add(guest);
         }
         Room selectedRoom = findRoomByNumber(rooms, roomNo);
+        System.out.println("Vytvářím rezervaci: Pokoj č. " + roomNo + " pro hosta " + guest.getFullName());
         System.out.println(roomIsValidMsg(selectedRoom, roomNo));
         int highestBookingNo = 0;
         for (Booking existingBooking : bookings) {
             highestBookingNo = Math.max(existingBooking.getBookingNo(), highestBookingNo);
         }
         if (roomIsValid(selectedRoom)) {
-            booking.setBooking(highestBookingNo + 1, guest, selectedRoom);
-            bookings.add(booking);
-            System.out.println("Rezervace úspěšně vytvořena.");
+            int existingBookingNo = bookingExists(bookings, selectedRoom, LocalDate.now(),LocalDate.now().plusDays(6) );
+            if(existingBookingNo!=0){
+                booking.setBooking(existingBookingNo, guest, selectedRoom);
+                if(selectedRoom.getNoOfBeds()>1){
+                    bookings.add(booking);
+                    System.out.println("Do rezervace úspěšně přidán další host.");
+                } else {
+                    System.out.println("Na požadovaném pokoji není volná postel - rezervace odmítnuta.");
+                }
+            } else {
+                booking.setBooking(highestBookingNo + 1, guest, selectedRoom);
+                bookings.add(booking);
+                System.out.println("Rezervace úspěšně vytvořena.");
+            }
         } else {
-            System.out.println("Rezervace nevytvořena - " + guest.getFullName() + " spí venku!");
+            System.out.println("Rezervace nevytvořena - " + guest.getName() + " spí venku!");
         }
     }
     //endregion

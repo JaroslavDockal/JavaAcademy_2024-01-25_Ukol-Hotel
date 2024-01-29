@@ -4,18 +4,14 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 public class Booking {
     private int bookingNo;
     private Room room;
-    //private int noOfBeds = room.getNoOfBeds();
     private Guest guest;
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
     private TypeOfStay typeOfStay;
-    private List<Guest> otherGuests;
-    // Hosty dat do pole o velikosti noOfBeds, ale pak jak to krmit?
 
     private void setBookingNo(int bookingNo) {
         this.bookingNo = bookingNo;
@@ -71,6 +67,18 @@ public class Booking {
         booking.setTypeOfStay(typeOfStay);
 
         return booking;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public LocalDate getCheckInDate() {
+        return checkInDate;
+    }
+
+    public LocalDate getCheckOutDate() {
+        return checkOutDate;
     }
 
     public int getBookingNo() {
