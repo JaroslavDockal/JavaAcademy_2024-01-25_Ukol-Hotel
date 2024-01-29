@@ -8,12 +8,14 @@ import java.util.List;
 
 public class Booking {
     private int bookingNo;
-    private Guest guest;
     private Room room;
+    //private int noOfBeds = room.getNoOfBeds();
+    private Guest guest;
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
     private TypeOfStay typeOfStay;
     private List<Guest> otherGuests;
+    // Hosty dat do pole o velikosti noOfBeds, ale pak jak to krmit?
 
     private void setBookingNo(int bookingNo) {
         this.bookingNo = bookingNo;
@@ -48,6 +50,7 @@ public class Booking {
         this.typeOfStay = typeOfStay;
     }
 
+    //Zkrácená verze - od dnes + dalších 6 dní, soukromý pobyt
     public void setBooking(int bookingNo, Guest guest, Room room) {
         LocalDate currentDate = LocalDate.now();
         this.bookingNo = bookingNo;

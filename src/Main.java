@@ -39,22 +39,30 @@ public class Main {
     public static void main(String[] args) {
         List<Room> rooms = createRooms();
         List<Booking> bookings = new ArrayList<>();
-        //List<Guest> guests = new ArrayList<>(); //Pouziju to na neco?
+        List<Guest> guests = new ArrayList<>();
 
-        createBooking(rooms,bookings,1,"Adéla","Malíková",LocalDate.of(1993, 3, 13),LocalDate.of(2024, 7, 19), LocalDate.of(2024, 7, 26), TypeOfStay.BUSINESS);
-        createBooking(rooms,bookings,7,"Jan","Dvořáček",LocalDate.of(1995, 5, 5));
-        createBooking(rooms,bookings,3,"Adéla","Malíková",LocalDate.of(1993, 3, 13));
-        createBooking(rooms,bookings,6,"Jan","Novák",LocalDate.of(1988, 7, 22),LocalDate.of(2024, Month.FEBRUARY,29),LocalDate.of(2024,Month.MARCH,3),TypeOfStay.BUSINESS);
+        createBooking(rooms,bookings,guests,1,"Adéla","Malíková",LocalDate.of(1993, 3, 13),LocalDate.of(2024, 7, 19), LocalDate.of(2024, 7, 26), TypeOfStay.BUSINESS);
+        createBooking(rooms,bookings,guests,7,"Jan","Dvořáček",LocalDate.of(1995, 5, 5));
+        createBooking(rooms,bookings,guests,3,"Adéla","Malíková",LocalDate.of(1993, 3, 13));
+        createBooking(rooms,bookings,guests,6,"Jan","Novák",LocalDate.of(1988, 7, 22),LocalDate.of(2024, Month.FEBRUARY,29),LocalDate.of(2024,Month.MARCH,3),TypeOfStay.BUSINESS);
+        createBooking(rooms,bookings,guests,12,"Josef","Vyskočil",LocalDate.of(1944, 7, 22));
 
-        System.out.println("-------------------------------------------");
+        divide();
+        System.out.println("Výpis všech vytvořených rezervací: ");
 
         for (Booking booking : bookings) {
             System.out.println(booking);
         }
+
+        divide();
+        System.out.println("Seznam všech hostů v systému: ");
+
+        for (Guest guest : guests) {
+            System.out.println(guest);
+        }
     }
 
     //region Rooms definition
-    //Vytvoř pokoje a vypiš na obrazovku jejich popis
     private static List<Room> createRooms() {
         List<Room> rooms = new ArrayList<>();
 
@@ -98,11 +106,13 @@ public class Main {
         room10.setRoom(10, 3, true, true, 2800);
         rooms.add(room10);
 
+        divide();
+
         for (Room room : rooms) {
             System.out.println(room.toString());
         }
 
-        System.out.println("-------------------------------------------");
+        divide();
 
         return rooms;
     }
@@ -133,16 +143,33 @@ public class Main {
             return false;
         }
     }
+
+    private static boolean guestExists(List<Guest> guests, Guest newGuest) {
+        for (Guest guest : guests) {
+            if (newGuest.getName().equals(guest.getName()) &&
+                    newGuest.getSurname().equals(guest.getSurname()) &&
+                    newGuest.getDateOfBirth().equals(guest.getDateOfBirth())) {
+                return true;
+            }
+        }
+        return false; // Host neexistuje v seznamu
+    }
+    private static void divide() {
+        System.out.println("--------------------------------------------------------------------------------------");
+    }
     //endregion
 
     //region Vytvoření rezervace
-    private static void createBooking(List<Room> rooms, List<Booking> bookings,
-                                      int roomNo, String name, String surname,
-                                      LocalDate dateOfBirth, LocalDate checkInDate,
-                                      LocalDate checkOutDate, TypeOfStay typeOfStay) {
+    private static void createBooking(List<Room> rooms, List<Booking> bookings, List<Guest> guests,
+                                      int roomNo, String name, String surname, LocalDate dateOfBirth,
+                                      LocalDate checkInDate, LocalDate checkOutDate, TypeOfStay typeOfStay) {
         Booking booking = new Booking();
         Guest guest = new Guest();
         guest.setGuest(name, surname, dateOfBirth);
+        if (!guestExists(guests, guest)) {
+            // Přidání nového hosta do seznamu
+            guests.add(guest);
+        }
         Room selectedRoom = findRoomByNumber(rooms, roomNo);
         System.out.println(roomIsValidMsg(selectedRoom, roomNo));
         int highestBookingNo = 0;
@@ -154,16 +181,18 @@ public class Main {
             bookings.add(booking);
             System.out.println("Rezervace úspěšně vytvořena.");
         } else {
-            System.out.println("Rezervace nevytvořena - chybná vstupní data!");
+            System.out.println("Rezervace nevytvořena - " + guest.getFullName() + "spí venku!");
         }
     }
 
-    private static void createBooking(List<Room> rooms, List<Booking> bookings,
-                                      int roomNo, String name, String surname,
-                                      LocalDate dateOfBirth) {
+    private static void createBooking(List<Room> rooms, List<Booking> bookings, List<Guest> guests,
+                                      int roomNo, String name, String surname, LocalDate dateOfBirth) {
         Booking booking = new Booking();
         Guest guest = new Guest();
         guest.setGuest(name, surname, dateOfBirth);
+        if (!guestExists(guests, guest)) {
+            guests.add(guest);
+        }
         Room selectedRoom = findRoomByNumber(rooms, roomNo);
         System.out.println(roomIsValidMsg(selectedRoom, roomNo));
         int highestBookingNo = 0;
@@ -175,7 +204,7 @@ public class Main {
             bookings.add(booking);
             System.out.println("Rezervace úspěšně vytvořena.");
         } else {
-            System.out.println("Rezervace nevytvořena - chybná vstupní data!");
+            System.out.println("Rezervace nevytvořena - " + guest.getFullName() + " spí venku!");
         }
     }
     //endregion

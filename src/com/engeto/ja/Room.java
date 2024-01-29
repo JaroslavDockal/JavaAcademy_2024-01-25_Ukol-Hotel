@@ -48,11 +48,11 @@ public class Room {
         return noOfBeds;
     }
 
-    public boolean hasBalcony() {
+    private boolean hasBalcony() {
         return hasBalcony;
     }
 
-    public boolean hasSeaView() {
+    private boolean hasSeaView() {
         return hasSeaView;
     }
 
