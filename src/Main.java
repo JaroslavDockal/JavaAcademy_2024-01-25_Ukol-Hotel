@@ -135,7 +135,7 @@ public class Main {
 
     private static String roomIsValidMsg(Room room, int roomNo){
         if (roomIsValid(room)) {
-            return "Pokoj č. " + roomNo + " byl nalezen: " + room.toString();
+            return "Pokoj č. " + roomNo + " byl nalezen: " + room.getRoomSummary();
         } else {
             return "Pokoj č. " + roomNo + " nebyl nalezen.";
         }

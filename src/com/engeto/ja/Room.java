@@ -71,6 +71,29 @@ public class Room {
         return room;
     }
 
+    public String getRoomSummary() {
+        String extraStr;
+        String bedsStr;
+        if (hasBalcony && hasSeaView) {
+            extraStr = "Pokoj s balkónem a výhledem na moře, ";
+        }else if(hasBalcony){
+            extraStr = "Pokoj s balkónem bez výhledu na moře, ";
+        }else if(hasSeaView){
+            extraStr = "Pokoj s výhledem na moře bez balkónu, ";
+        }else{
+            extraStr = "Pokoj bez balkónu a výhledu na moře, ";
+        }
+        if (noOfBeds==1){
+            bedsStr = " postel, ";
+        } else if (noOfBeds <= 5){
+            bedsStr = " postele, ";
+        } else {
+            bedsStr = " postelí, ";
+        }
+
+        return extraStr + noOfBeds + bedsStr + pricePerNight.toString() + " CZK/noc.";
+    }
+
     @Override public String toString() {
         String extraStr;
         String bedsStr;
