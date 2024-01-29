@@ -1,7 +1,9 @@
 package com.engeto.ja;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class Booking {
@@ -68,7 +70,16 @@ public class Booking {
         return booking;
     }
 
-    @Override public String toString() {
-        return "Rezervace č. " + bookingNo + ", " + checkInDate.format(DateTimeFormatter.ofPattern("d.M.y")) + " - " + checkOutDate.format(DateTimeFormatter.ofPattern("d.M.y")) + ", " + guest.toString() +", " + room.toString();
+    public int getBookingNo() {
+        return bookingNo;
     }
+
+    @Override public String toString() {
+        BigDecimal pricePerNight = room.getPricePerNight();
+        long stayDuration = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
+        return "Rezervace č. " + bookingNo + ", " + checkInDate.format(DateTimeFormatter.ofPattern("d.M.y")) + " - " +
+                checkOutDate.format(DateTimeFormatter.ofPattern("d.M.y")) + ", " + guest.toString() +", " + room.toString() +
+                " Celkem k úhradě: " + String.format("%.0f",pricePerNight.multiply(BigDecimal.valueOf(stayDuration))) + " CZK.";
+    }
+
 }

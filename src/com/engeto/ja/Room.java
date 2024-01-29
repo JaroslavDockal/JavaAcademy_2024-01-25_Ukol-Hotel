@@ -77,7 +77,7 @@ public class Room {
         if (hasBalcony && hasSeaView) {
             extraStr = " s balkónem a výhledem na moře, ";
         }else if(hasBalcony){
-            extraStr = " s balkónem,";
+            extraStr = " s balkónem, ";
         }else if(hasSeaView){
             extraStr = " s výhledem na moře, ";
         }else{
