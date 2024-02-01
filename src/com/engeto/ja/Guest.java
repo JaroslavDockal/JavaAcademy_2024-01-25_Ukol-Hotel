@@ -1,5 +1,4 @@
 package com.engeto.ja;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 

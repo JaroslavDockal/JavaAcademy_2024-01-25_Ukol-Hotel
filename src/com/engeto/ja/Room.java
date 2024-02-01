@@ -1,5 +1,4 @@
 package com.engeto.ja;
-
 import java.math.BigDecimal;
 
 public class Room {
@@ -46,14 +45,6 @@ public class Room {
 
     public int getNoOfBeds() {
         return noOfBeds;
-    }
-
-    private boolean hasBalcony() {
-        return hasBalcony;
-    }
-
-    private boolean hasSeaView() {
-        return hasSeaView;
     }
 
     public BigDecimal getPricePerNight() {
