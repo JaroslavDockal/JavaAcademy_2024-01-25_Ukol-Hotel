@@ -1,4 +1,4 @@
-package com.engeto.ja;
+package com.engeto.ja.hotel;
 import java.math.BigDecimal;
 
 public class Room {

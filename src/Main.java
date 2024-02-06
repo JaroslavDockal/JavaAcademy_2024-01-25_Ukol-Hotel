@@ -25,273 +25,95 @@ Připrav rezervace:
 Vypiš seznam všech rezervací.
 */
 
-import com.engeto.ja.*;
+import com.engeto.ja.hotel.TypeOfStay;
+
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
+
+import static com.engeto.ja.hotel.BookingManager.*;
 
 public class Main {
 
     public static void main(String[] args) {
-        List<Room> rooms = createRooms();
-        List<Booking> bookings = new ArrayList<>();
-        List<Guest> guests = new ArrayList<>();
 
-        createBooking(rooms,bookings,guests,1,"Adéla","Malíková",LocalDate.of(1993, 3, 13),
+        addBooking(1,"Adéla","Malíková",LocalDate.of(1993, 3, 13),
                 LocalDate.of(2024, 7, 19), LocalDate.of(2024, 7, 26), TypeOfStay.BUSINESS);
 
-        createBooking(rooms,bookings,guests,2,"Jan","Dvořáček",LocalDate.of(1995, 5, 5));
-        createBooking(rooms,bookings,guests,2,"Adéla","Malíková",LocalDate.of(1993, 3, 13));
+        addBooking(2,"Jan","Dvořáček",LocalDate.of(1995, 5, 5));
+        addBooking(2,"Adéla","Malíková",LocalDate.of(1993, 3, 13));
 
-        createBooking(rooms,bookings,guests,6,"Jan","Novák",LocalDate.of(1988, 7, 22),
+        addBooking(6,"Jan","Novák",LocalDate.of(1988, 7, 22),
                 LocalDate.of(2024, Month.FEBRUARY,29),LocalDate.of(2024,Month.MARCH,3),TypeOfStay.BUSINESS);
 
-        createBooking(rooms,bookings,guests,12,"Josef","Vyskočil",LocalDate.of(1944, 7, 22));
+        addBooking(12,"Josef","Vyskočil",LocalDate.of(1944, 7, 22));
 
-        createBooking(rooms,bookings,guests,6,"Martin","Novák",LocalDate.of(1976, 4, 6),
+        addBooking(6,"Martin","Novák",LocalDate.of(1976, 4, 6),
                 LocalDate.of(2024, 2,27),LocalDate.of(2024,3,1),TypeOfStay.PRIVATE);
 
-        createBooking(rooms,bookings,guests,5,"Martin","Novák",LocalDate.of(1976, 4, 6));
-        createBooking(rooms,bookings,guests,5,"Josef","Vyskočil",LocalDate.of(1944, 7, 22));
-        createBooking(rooms,bookings,guests,5,"Lojza","Vopršálek",LocalDate.of(1965, 3, 14));
+        addBooking(5,"Martin","Novák",LocalDate.of(1976, 4, 6));
+        addBooking(5,"Josef","Vyskočil",LocalDate.of(1944, 7, 22));
+        addBooking(5,"Lojza","Vopršálek",LocalDate.of(1965, 3, 14));
 
-        divide();
-        System.out.println("Výpis všech vytvořených rezervací: ");
-
-        for (Booking booking : bookings) {
-            System.out.println(booking);
-        }
-
-        divide();
-        System.out.println("Seznam všech hostů v systému: ");
-
-        for (Guest guest : guests) {
-            System.out.println(guest);
-        }
-    }
-
-    //region Rooms definition
-    private static List<Room> createRooms() {
-        List<Room> rooms = new ArrayList<>();
-
-        Room room1 = new Room();
-        room1.setRoom(1,2,true,true,1000);
-        rooms.add(room1);
-
-        Room room2 = new Room();
-        room2.setRoom(2,2,true,true,1000);
-        rooms.add(room2);
-
-        Room room3 = new Room();
-        room3.setRoom(3,3,false,true,2400);
-        rooms.add(room3);
-
-        Room room4 = new Room();
-        room4.setRoom(4, 1, false, false, 900);
-        rooms.add(room4);
-
-        Room room5 = new Room();
-        room5.setRoom(5, 2, false, true, 1200);
-        rooms.add(room5);
-
-        Room room6 = new Room();
-        room6.setRoom(6, 2, true, false, 900);
-        rooms.add(room6);
-
-        Room room7 = new Room();
-        room7.setRoom(7, 3, true, true, 2800);
-        rooms.add(room7);
-
-        Room room8 = new Room();
-        room8.setRoom(8, 1, false, false, 700);
-        rooms.add(room8);
-
-        Room room9 = new Room();
-        room9.setRoom(9, 2, false, true, 1100);
-        rooms.add(room9);
-
-        Room room10 = new Room();
-        room10.setRoom(10, 3, true, true, 2800);
-        rooms.add(room10);
-
-        divide();
-        System.out.println("Seznam dostupných pokojů: ");
-        for (Room room : rooms) {
-            System.out.println(room.toString());
-        }
-
-        divide();
-
-        return rooms;
-    }
-    //endregion
-
-    //region Pomocné funkce
-    private static Room findRoomByNumber(List<Room> rooms, int roomNumber) {
-        for (Room room : rooms) {
-            if (room.getRoomNo() == roomNumber) {
-                return room;
-            }
-        }
-        return null;
-    }
-
-    private static String roomIsValidMsg(Room room, int roomNo){
-        if (roomIsValid(room)) {
-            return "Pokoj č. " + roomNo + " byl nalezen: " + room.getRoomSummary();
-        } else {
-            return "Pokoj č. " + roomNo + " nebyl nalezen.";
-        }
-    }
-
-    private static boolean roomIsValid(Room room){
-        if (room!= null) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private static boolean guestExists(List<Guest> guests, Guest newGuest) {
-        for (Guest guest : guests) {
-            if (newGuest.getName().equals(guest.getName()) &&
-                newGuest.getSurname().equals(guest.getSurname()) &&
-                newGuest.getDateOfBirth().equals(guest.getDateOfBirth())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static int bookingExists(List<Booking> bookings, Room room, LocalDate checkInDate, LocalDate checkOutDate) {
-        for (Booking booking : bookings) {
-            if (room.getRoomNo() == booking.getRoom().getRoomNo() &&
-                    checkInDate.equals(booking.getCheckInDate()) &&
-                    checkOutDate.equals(booking.getCheckOutDate())) {
-                System.out.println("Pro požadované období už existuje rezervace (č. " + booking.getBookingNo() + ").");
-                return booking.getBookingNo();
-            }
-        }
-        return 0;
-    }
-
-    private static boolean dateRangesDoNotOverlap(int roomNo1, LocalDate checkIn1, LocalDate checkOut1, int roomNo2, LocalDate checkIn2, LocalDate checkOut2) {
-        return (checkIn1.isBefore(checkOut2) || checkOut1.isBefore(checkIn2)) && roomNo1 == roomNo2;
-    }
-
-    private static int noOfBookingsRecorded(List<Booking> bookings, int bookingNoToCount) {
-        int count = 0;
-
-        for (Booking booking : bookings) {
-            if (booking.getBookingNo() == bookingNoToCount) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    private static void divide() {
         System.out.println("--------------------------------------------------------------------------------------");
+        System.out.println("Výpis všech vytvořených rezervací: ");
+        getBookings();
+
+        System.out.println("--------------------------------------------------------------------------------------");
+        System.out.println("Seznam všech hostů v systému: ");
+        getGuests();
+
+        //Úkol z 3. lekce
+        System.out.println("--------------------------------------------------------------------------------------");
+        System.out.println("Počet hostů s rezervací pracovnícho pobytu: " + getNumberOfWorkingBookings());
+        System.out.println("Počet hostů s rezervací soukromécho pobytu: " + getNumberOfPrivateBookings());
+        System.out.println("Průměrný počet hostů na rezervaci: " + String.format("%.2f",getAverageGuests()));
+
+        clearBookings();
+
+        fillBookings();
+
+        System.out.println("--------------------------------------------------------------------------------------");
+        System.out.println("Počet rezervací pracovných pobytů: " + getNumberOfWorkingBookings());
+
     }
-    //endregion
 
-    //region Vytvoření rezervace
-    private static void createBooking(List<Room> rooms, List<Booking> bookings, List<Guest> guests,
-                                      int roomNo, String name, String surname, LocalDate dateOfBirth,
-                                      LocalDate checkInDate, LocalDate checkOutDate, TypeOfStay typeOfStay) {
-        Booking booking = new Booking();
-        Guest guest = new Guest();
-        guest.setGuest(name, surname, dateOfBirth);
-        if (!guestExists(guests, guest)) {
-            guests.add(guest);
-        }
-        Room selectedRoom = findRoomByNumber(rooms, roomNo);
-        System.out.println("\nVytvářím rezervaci: Pokoj č. " + roomNo + " pro hosta " + guest.getFullName());
-        System.out.println(roomIsValidMsg(selectedRoom, roomNo));
-        int highestBookingNo = 0;
-        for (Booking existingBooking : bookings) {
-            highestBookingNo = Math.max(existingBooking.getBookingNo(), highestBookingNo);
+    /*Vytvoření testovacích dat
+    Protože načítat data ze souboru se naučíme až v dalších lekcích, vytvoříme si zatím testovací data na začátku programu ručně.
+    Ve třídě Main připrav metodu fillBookings s následujícím kódem:
+    V praxi bychom tato data získali od uživatele, nebo je načetli ze vstupního souboru či z databáze.
+    Vlož do evidence rezervací následující rezervace. Údaje, které chybí, si vymysli:
+
+    Karel Dvořák, narozen 15. 5. 1990, si rezervuje pokoj číslo 3 od 1. 6. 2023 do 7. 6. 2023. Bude to pracovní pobyt.
+    Jiný pan Karel Dvořák, narozen 3. 1. 1979, si rezervuje pokoj číslo 2 od 18. 7. 2023 do 21. 7. 2023. Bude to rekreační pobyt.
+
+    Fyzioterapeutka Karolína Tmavá si pro své klienty rezervuje pokoj číslo 2 na dvoudenní pobyty v měsíci srpnu. Vytvoř 10 dvoudenních rezervací pro rekreační pobyty:
+        První rezervace bude od 1. do 2. 8.,
+        druhá od 3. do 4. 8.
+        třetí od 5. do 6. 8.
+        a tak dále. Poslední rezervace bude od 19. do 20. 6. Karolína bude uvedena jako jediný host.
+    Fyzioterapeutka Karolína Tmavá z předchozího úkolu si dále rezervuje pokoj číslo 3 na celý srpen (od 1.8. do 31.8.).
+
+     */
+    public static void fillBookings(){
+        addBooking(3,"Karel","Dvořák",LocalDate.of(1990, 5, 15),
+                LocalDate.of(2024, 6, 1), LocalDate.of(2024, 6, 7), TypeOfStay.BUSINESS);
+
+        addBooking(2,"Karel","Dvořák",LocalDate.of(1979, 1, 3),
+                LocalDate.of(2024, 7, 18), LocalDate.of(2024, 7, 21), TypeOfStay.PRIVATE);
+
+        getBookings();
+        for (long i = 0; i < 20; i=i+2) {
+            int noOfNights = 1;
+            LocalDate firstBookingDate = LocalDate.of(2024, 8,1);
+            LocalDate checkInDate = firstBookingDate.plusDays(i);
+            LocalDate checkOutDate = checkInDate.plusDays(noOfNights);
+
+            addBooking(2,"Karolína","Tmavá",LocalDate.of(1987, 4, 9),
+                    checkInDate, checkOutDate, TypeOfStay.PRIVATE);
         }
 
-        boolean bookingOverlap = false;
-        for (Booking existingBooking : bookings) {
-            bookingOverlap = (dateRangesDoNotOverlap(existingBooking.getRoom().getRoomNo() ,existingBooking.getCheckInDate(), existingBooking.getCheckOutDate(), roomNo, checkInDate, checkOutDate));
-        }
+        addBooking(1,"Karolína","Tmavá",LocalDate.of(1987, 4, 9),
+                LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 31), TypeOfStay.BUSINESS);
 
-        if (roomIsValid(selectedRoom)) {
-            int existingBookingNo = bookingExists(bookings, selectedRoom, checkInDate, checkOutDate );
-
-            if (bookingOverlap) {
-                if(existingBookingNo!=0){
-                    booking.setBooking(existingBookingNo, guest, selectedRoom);
-                    int noOfExistingBookings = noOfBookingsRecorded(bookings, existingBookingNo);
-                    if (selectedRoom.getNoOfBeds() > noOfExistingBookings) {
-                        bookings.add(booking);
-                        System.out.println("Do rezervace úspěšně přidán další host.");
-                    } else {
-                        System.out.println("Vytvoření rezervace nebylo úspěšné - na požadovaném pokoji není volná postel.");
-                    }
-                } else {
-                    System.out.println("Vytvoření rezervace nebylo úspěšné - požadovaný pokoj není v daných datech k dispozici.");
-                }
-            } else {
-            booking.setBooking(highestBookingNo + 1, guest, selectedRoom, checkInDate, checkOutDate, typeOfStay);
-            bookings.add(booking);
-            System.out.println("Rezervace úspěšně vytvořena.");
-            }
-        } else {
-            System.out.println("Vytvoření rezervace nebylo úspěšné - " + guest.getName() + " spí venku!");
-        }
     }
-    //endregion
-
-    //region Vytvoření rezervace - zkrácená verze
-    private static void createBooking(List<Room> rooms, List<Booking> bookings, List<Guest> guests,
-                                      int roomNo, String name, String surname, LocalDate dateOfBirth) {
-        Booking booking = new Booking();
-        Guest guest = new Guest();
-        guest.setGuest(name, surname, dateOfBirth);
-        if (!guestExists(guests, guest)) {
-            guests.add(guest);
-        }
-        Room selectedRoom = findRoomByNumber(rooms, roomNo);
-        System.out.println("\nVytvářím rezervaci: Pokoj č. " + roomNo + " pro hosta " + guest.getFullName());
-        System.out.println(roomIsValidMsg(selectedRoom, roomNo));
-        int highestBookingNo = 0;
-        for (Booking existingBooking : bookings) {
-            highestBookingNo = Math.max(existingBooking.getBookingNo(), highestBookingNo);
-        }
-
-        boolean bookingOverlap = false;
-        for (Booking existingBooking : bookings) {
-            bookingOverlap = (dateRangesDoNotOverlap(existingBooking.getRoom().getRoomNo() ,existingBooking.getCheckInDate(), existingBooking.getCheckOutDate(), roomNo, LocalDate.now(), LocalDate.now().plusDays(6)));
-        }
-
-        if (roomIsValid(selectedRoom)) {
-            int existingBookingNo = bookingExists(bookings, selectedRoom, LocalDate.now(), LocalDate.now().plusDays(6) );
-
-            if (bookingOverlap) {
-                if(existingBookingNo!=0){
-                    booking.setBooking(existingBookingNo, guest, selectedRoom);
-                    int noOfExistingBookings = noOfBookingsRecorded(bookings, existingBookingNo);
-                    if (selectedRoom.getNoOfBeds() > noOfExistingBookings) {
-                        bookings.add(booking);
-                        System.out.println("Do rezervace úspěšně přidán další host.");
-                    } else {
-                        System.out.println("Vytvoření rezervace nebylo úspěšné - na požadovaném pokoji není volná postel.");
-                    }
-                } else {
-                    System.out.println("Vytvoření rezervace nebylo úspěšné - požadovaný pokoj není v daných datech k dispozici.");
-                }
-            } else {
-                booking.setBooking(highestBookingNo + 1, guest, selectedRoom);
-                bookings.add(booking);
-                System.out.println("Rezervace úspěšně vytvořena.");
-            }
-        } else {
-            System.out.println("Vytvoření rezervace nebylo úspěšné - " + guest.getName() + " spí venku!");
-        }
-    }
-    //endregion
 }

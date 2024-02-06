@@ -1,4 +1,4 @@
-package com.engeto.ja;
+package com.engeto.ja.hotel;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
