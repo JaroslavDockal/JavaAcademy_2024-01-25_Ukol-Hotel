@@ -1,35 +1,6 @@
-/*
-Potřebujeme evidovat hosty (guest), které ubytováváme v hotelu.
-O každém hostu musíme uložit jméno, příjmení a datum narození.
-
-Hosty vždy ubytováváme na pokojích (room). Pokoj je identifikován svým číslem.
-O každém pokoji chceme evidovat, kolik lůžek tam je (neřeš přistýlky apod.),
-zda má pokoj balkón a zda má výhled na moře a jaká je cena pokoje za jednu noc
-(předpokládej, že je cena pevně daná bez ohledu na sezónu a počet ubytovaných).
-
-V rámci jedné rezervace (booking) vždy přiřazujeme pokoj jednomu nebo více hostům na
-časové období mezi dvěma daty (například pokoj číslo 3 na období od 15. 7. do 24. 7. 2021).
-Pobyt je buď pracovní, nebo rekreační (type of vacation).
-
-Chceme také mít k dispozici třídu, která bude uchovávat všechny rezervace (například list of bookings),
-které jsme v systému vytvořili a bude mít metodu, která vypíše informace o všech rezervacích.
-
-Vytvoř hosty Adélu Malíkovou (narozena 13. 3. 1993) a Jana Dvořáčka (narozen 5.5.1995).
-Vypiš na obrazovku jejich souhrnný popis ve formátu: Adéla Malíková (1993-03-13)
-Vytvoř pokoje a vypiš na obrazovku jejich popis:
-    pokoj číslo 1 a pokoj číslo 2 jsou jednolůžkové za cenu 1000 Kč/noc, s balkonem a výhledem na moře.
-    pokoj číslo 3 je trojlůžkový za cenu 2400 Kč/noc, bez balkónu, s výhledem na moře.
-Připrav rezervace:
-    pro Adélu na pokoj č. 1 od 19. do 26. 7. 2021.
-    pro oba (společná rezervace) na pokoj č. 3 od 1. do 14. 9. 2021.
-Vypiš seznam všech rezervací.
-*/
-
-import com.engeto.ja.hotel.TypeOfStay;
-
 import java.time.LocalDate;
 import java.time.Month;
-
+import com.engeto.ja.hotel.TypeOfStay;
 import static com.engeto.ja.hotel.BookingManager.*;
 
 public class Main {
@@ -56,7 +27,7 @@ public class Main {
 
         System.out.println("--------------------------------------------------------------------------------------");
         System.out.println("Výpis všech vytvořených rezervací: ");
-        getBookings();
+        printBookings();
 
         System.out.println("--------------------------------------------------------------------------------------");
         System.out.println("Seznam všech hostů v systému: ");
@@ -78,7 +49,6 @@ public class Main {
     }
 
     /*Vytvoření testovacích dat
-    Protože načítat data ze souboru se naučíme až v dalších lekcích, vytvoříme si zatím testovací data na začátku programu ručně.
     Ve třídě Main připrav metodu fillBookings s následujícím kódem:
     V praxi bychom tato data získali od uživatele, nebo je načetli ze vstupního souboru či z databáze.
     Vlož do evidence rezervací následující rezervace. Údaje, které chybí, si vymysli:
@@ -92,8 +62,8 @@ public class Main {
         třetí od 5. do 6. 8.
         a tak dále. Poslední rezervace bude od 19. do 20. 6. Karolína bude uvedena jako jediný host.
     Fyzioterapeutka Karolína Tmavá z předchozího úkolu si dále rezervuje pokoj číslo 3 na celý srpen (od 1.8. do 31.8.).
-
      */
+
     public static void fillBookings(){
         addBooking(3,"Karel","Dvořák",LocalDate.of(1990, 5, 15),
                 LocalDate.of(2024, 6, 1), LocalDate.of(2024, 6, 7), TypeOfStay.BUSINESS);
@@ -101,8 +71,7 @@ public class Main {
         addBooking(2,"Karel","Dvořák",LocalDate.of(1979, 1, 3),
                 LocalDate.of(2024, 7, 18), LocalDate.of(2024, 7, 21), TypeOfStay.PRIVATE);
 
-        getBookings();
-        for (long i = 0; i < 20; i=i+2) {
+        for (int i = 0; i < 20; i=i+2) {
             int noOfNights = 1;
             LocalDate firstBookingDate = LocalDate.of(2024, 8,1);
             LocalDate checkInDate = firstBookingDate.plusDays(i);
@@ -114,6 +83,15 @@ public class Main {
 
         addBooking(1,"Karolína","Tmavá",LocalDate.of(1987, 4, 9),
                 LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 31), TypeOfStay.BUSINESS);
-
     }
+
+    //V hlavní třídě projektu připrav metodu pro výpis seznam všech rezervací ve formátu:
+    //datumOd až datumDo: jméno hlavního hosta (datum narození)[počet hostů, výhledNaMoře ano/ne] za cena
+
+    //Připrav metodu pro výpis prvních 8 rezervací, které jsou určeny pro rekreaci (typ pobytu je rekreační). Pracovní pobyty při výpisu ignoruj/přeskoč.
+    //Můžeš ji také zobecnit a počet vypisovaných rezervací zadat jako parametr metody.
+
+    //Připrav v hlavní třídě metodu printGuestStatistics, která vypíše:
+    //celkový počet rezervací s jedním/dvěma/více hosty.
+
 }

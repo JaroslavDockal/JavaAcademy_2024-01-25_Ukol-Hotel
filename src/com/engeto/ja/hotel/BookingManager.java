@@ -12,6 +12,7 @@ public class BookingManager {
     static List<Booking> bookings = new ArrayList<>();
     static List<Guest> guests = new ArrayList<>();
 
+    //Vložení rezervace do seznamu: addBooking(Booking newBooking)
     public static void addBooking(int roomNo, String name, String surname, LocalDate dateOfBirth,
                                   LocalDate checkInDate, LocalDate checkOutDate, TypeOfStay typeOfStay){
         createBooking(roomNo, name, surname, dateOfBirth, checkInDate, checkOutDate, typeOfStay);
@@ -90,7 +91,7 @@ public class BookingManager {
 
             if (bookingOverlap) {
                 if(existingBookingNo!=0){
-                    booking.setBooking(existingBookingNo, guest, selectedRoom, checkInDate, checkOutDate, typeOfStay, Boolean.TRUE);
+                    booking.setBooking(existingBookingNo, guest, selectedRoom, checkInDate, checkOutDate, typeOfStay);
                     int noOfExistingBookings = noOfBookingsRecorded(bookings, existingBookingNo);
                     if (selectedRoom.getNoOfBeds() > noOfExistingBookings) {
                         bookings.add(booking);
@@ -113,10 +114,33 @@ public class BookingManager {
     //endregion
 
     //region
-    public static void getBookings(){
+    public static void printBookings(){
         for (Booking booking : bookings) {
             System.out.println(booking);
         }
+    }
+
+    //Získání rezervace se zadaným indexem ze seznamu: getBooking(index).
+    public static Booking getBooking(int bookingNo){
+        for (Booking booking : bookings) {
+            if(booking.getBookingNo() == bookingNo){
+                return booking;
+            }
+        }
+        return null;
+    }
+
+    //Získání seznamu rezervací: getBookings().
+    public static List<Booking> getBookings(){
+        return bookings;
+    }
+
+    //Vymazání seznamu rezervací: clearBookings()
+    public static void clearBookings(){
+        System.out.println("--------------------------------------------------------------------------------------");
+        System.out.println("Mažu seznam rezervací...");
+        bookings.clear();
+        System.out.println("Seznam rezervací vymazán.");
     }
 
     public static void getGuests(){
@@ -126,6 +150,7 @@ public class BookingManager {
     }
     //endregion
 
+    //Ve třídě BookingManager připrav metodu getNumberOfWorkingBookings, která vrátí počet rezervací pro pracovní pobyty (ty, které mají v type of vacation pracovní pobyt).
     public static int getNumberOfWorkingBookings(){
         int noOfWorkingBookings = 0;
         for (Booking booking : bookings) {
@@ -146,6 +171,7 @@ public class BookingManager {
         return noOfPrivateBookings;
     }
 
+    //Ve třídě BookingManager připrav metodu getAverageGuests. Metoda projde všechny rezervace a vrátí jako výsledek průměrný počet hostů na rezervaci.
     // Asi není ideál, ale účel to splní
     public static double getAverageGuests(){
         int maxBookingNumber = 0;
@@ -158,13 +184,6 @@ public class BookingManager {
         System.out.println("Celkový počet záznamů : " + bookings.size());
 
         return (double) bookings.size()/maxBookingNumber;
-    }
-
-    public static void clearBookings(){
-        System.out.println("--------------------------------------------------------------------------------------");
-        System.out.println("Mažu seznam rezervací...");
-        bookings.clear();
-        System.out.println("Seznam rezervací vymazán.");
     }
     //endregion
 
