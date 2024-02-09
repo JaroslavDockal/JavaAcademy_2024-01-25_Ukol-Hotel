@@ -49,35 +49,38 @@ public class Rooms {
         room10.setRoom(10, 3, true, true, 2800);
         rooms.add(room10);
 
+        //printAllRooms(rooms);
+
+        return rooms;
+    }
+
+    public static void printAllRooms(List<Room> rooms){
         System.out.println("--------------------------------------------------------------------------------------");
         System.out.println("Seznam dostupných pokojů: ");
         for (Room room : rooms) {
             System.out.println(room.toString());
         }
         System.out.println("--------------------------------------------------------------------------------------");
-
-        return rooms;
     }
 
-    public static Room findRoomByNumber(List<Room> rooms, int roomNumber) {
+    public static Room findRoomByNumber(List<Room> rooms, int roomNo) {
         for (Room room : rooms) {
-            if (room.getRoomNo() == roomNumber) {
+            if (room.getRoomNo() == roomNo) {
                 return room;
             }
         }
         return null;
     }
 
-    public static String roomIsValidMsg(Room room, int roomNo){
+    public static boolean roomIsValid(Room room){
+        return room != null;
+    }
+
+    public static String roomValidationStatus(Room room, int roomNo){
         if (roomIsValid(room)) {
             return "Pokoj č. " + roomNo + " byl nalezen: " + room.getRoomSummary();
         } else {
             return "Pokoj č. " + roomNo + " nebyl nalezen.";
         }
     }
-
-    public static boolean roomIsValid(Room room){
-        return room != null;
-    }
-
 }

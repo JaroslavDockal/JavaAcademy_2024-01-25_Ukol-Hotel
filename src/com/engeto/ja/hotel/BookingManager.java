@@ -3,7 +3,9 @@ package com.engeto.ja.hotel;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import static com.engeto.ja.hotel.Rooms.*;
 
@@ -12,7 +14,6 @@ public class BookingManager {
     static List<Booking> bookings = new ArrayList<>();
     static List<Guest> guests = new ArrayList<>();
 
-    //Vložení rezervace do seznamu: addBooking(Booking newBooking)
     public static void addBooking(int roomNo, String name, String surname, LocalDate dateOfBirth,
                                   LocalDate checkInDate, LocalDate checkOutDate, TypeOfStay typeOfStay){
         createBooking(roomNo, name, surname, dateOfBirth, checkInDate, checkOutDate, typeOfStay);
@@ -20,10 +21,8 @@ public class BookingManager {
 
     public static void addBooking(int roomNo, String name, String surname, LocalDate dateOfBirth){
         createBooking(roomNo, name, surname, dateOfBirth, LocalDate.now(), LocalDate.now().plusDays(6), TypeOfStay.PRIVATE);
-
     }
 
-    //region Pomocné funkce
     private static boolean guestExists(List<Guest> guests, Guest newGuest) {
         for (Guest guest : guests) {
             if (newGuest.getName().equals(guest.getName()) &&
@@ -47,23 +46,18 @@ public class BookingManager {
         return 0;
     }
 
+    private static boolean checkDateOrder(LocalDate checkInDate, LocalDate checkOutDate) {
+        return checkInDate.isBefore(checkOutDate);
+    }
+
     private static boolean dateRangesDoNotOverlap(int roomNo1, LocalDate checkIn1, LocalDate checkOut1, int roomNo2, LocalDate checkIn2, LocalDate checkOut2) {
-        return (checkIn1.isBefore(checkOut2) || checkOut1.isBefore(checkIn2)) && roomNo1 == roomNo2;
-    }
-
-    private static int noOfBookingsRecorded(List<Booking> bookings, int bookingNoToCount) {
-        int count = 0;
-
-        for (Booking booking : bookings) {
-            if (booking.getBookingNo() == bookingNoToCount) {
-                count++;
-            }
+        if (checkIn2.isBefore(checkIn1)){
+            return checkIn1.isBefore(checkOut2) && roomNo1 == roomNo2;
+        }else {
+            return checkIn2.isBefore(checkOut1) && roomNo1 == roomNo2;
         }
-        return count;
     }
-    //endregion
 
-    //region Vytvoření rezervace
     private static void createBooking(int roomNo, String name, String surname, LocalDate dateOfBirth,
                                       LocalDate checkInDate, LocalDate checkOutDate, TypeOfStay typeOfStay) {
         Booking booking = new Booking();
@@ -75,7 +69,8 @@ public class BookingManager {
         Room selectedRoom = findRoomByNumber(rooms, roomNo);
         System.out.println("\nVytvářím rezervaci: Pokoj č. " + roomNo + " pro hosta " + guest.getFullName() + " (" +
                 checkInDate.format(DateTimeFormatter.ofPattern("d.M.y")) + " až " + checkOutDate.format(DateTimeFormatter.ofPattern("d.M.y")) + ")");
-        System.out.println(roomIsValidMsg(selectedRoom, roomNo));
+        System.out.println(roomValidationStatus(selectedRoom, roomNo));
+
         int highestBookingNo = 0;
         for (Booking existingBooking : bookings) {
             highestBookingNo = Math.max(existingBooking.getBookingNo(), highestBookingNo);
@@ -84,6 +79,10 @@ public class BookingManager {
         boolean bookingOverlap = false;
         for (Booking existingBooking : bookings) {
             bookingOverlap = (dateRangesDoNotOverlap(existingBooking.getRoom().getRoomNo() ,existingBooking.getCheckInDate(), existingBooking.getCheckOutDate(), roomNo, checkInDate, checkOutDate));
+
+            //Debug messages:
+            //System.out.println(existingBooking.getRoom().getRoomNo()+" "+existingBooking.getCheckInDate()+" "+existingBooking.getCheckOutDate()+", "+roomNo+" "+checkInDate+" "+checkOutDate);
+            //System.out.println(bookingOverlap ? "Rezervace " + roomNo + " se překrývá s rezervací " + existingBooking.getBookingNo() + "." : "Rezervace " + roomNo + " se nepřekrývá se s rezervací " + existingBooking.getBookingNo() + ".");
         }
 
         if (roomIsValid(selectedRoom)) {
@@ -92,9 +91,11 @@ public class BookingManager {
             if (bookingOverlap) {
                 if(existingBookingNo!=0){
                     booking.setBooking(existingBookingNo, guest, selectedRoom, checkInDate, checkOutDate, typeOfStay);
-                    int noOfExistingBookings = noOfBookingsRecorded(bookings, existingBookingNo);
-                    if (selectedRoom.getNoOfBeds() > noOfExistingBookings) {
-                        bookings.add(booking);
+
+                    if (selectedRoom.getNoOfBeds() > Objects.requireNonNull(getBooking(existingBookingNo)).getGuests().size()) {
+                        Guest newGuest = new Guest();
+                        newGuest.setGuest(name, surname, dateOfBirth);
+                        Objects.requireNonNull(getBooking(existingBookingNo)).setBooking(newGuest);
                         System.out.println("Do rezervace úspěšně přidán další host.");
                     } else {
                         System.out.println("Vytvoření rezervace nebylo úspěšné - na požadovaném pokoji není volná postel.");
@@ -103,24 +104,19 @@ public class BookingManager {
                     System.out.println("Vytvoření rezervace nebylo úspěšné - požadovaný pokoj není v daných datech k dispozici.");
                 }
             } else {
-                booking.setBooking(highestBookingNo + 1, guest, selectedRoom, checkInDate, checkOutDate, typeOfStay);
-                bookings.add(booking);
-                System.out.println("Rezervace úspěšně vytvořena.");
+                if(checkDateOrder(checkInDate, checkOutDate)){
+                    booking.setBooking(highestBookingNo + 1, guest, selectedRoom, checkInDate, checkOutDate, typeOfStay);
+                    bookings.add(booking);
+                    System.out.println("Rezervace úspěšně vytvořena.");
+                } else {
+                    System.out.println("Vytvoření rezervace nebylo úspěšné - špatně zadané datum od/do.");
+                }
             }
         } else {
             System.out.println("Vytvoření rezervace nebylo úspěšné - " + guest.getName() + " spí venku!");
         }
     }
-    //endregion
 
-    //region
-    public static void printBookings(){
-        for (Booking booking : bookings) {
-            System.out.println(booking);
-        }
-    }
-
-    //Získání rezervace se zadaným indexem ze seznamu: getBooking(index).
     public static Booking getBooking(int bookingNo){
         for (Booking booking : bookings) {
             if(booking.getBookingNo() == bookingNo){
@@ -130,27 +126,26 @@ public class BookingManager {
         return null;
     }
 
-    //Získání seznamu rezervací: getBookings().
     public static List<Booking> getBookings(){
         return bookings;
     }
 
-    //Vymazání seznamu rezervací: clearBookings()
     public static void clearBookings(){
         System.out.println("--------------------------------------------------------------------------------------");
         System.out.println("Mažu seznam rezervací...");
         bookings.clear();
         System.out.println("Seznam rezervací vymazán.");
+        System.out.println("--------------------------------------------------------------------------------------");
     }
 
     public static void getGuests(){
+        guests.sort(Comparator.comparing(Guest::getSurname));
+
         for (Guest guest : guests) {
             System.out.println(guest);
         }
     }
-    //endregion
 
-    //Ve třídě BookingManager připrav metodu getNumberOfWorkingBookings, která vrátí počet rezervací pro pracovní pobyty (ty, které mají v type of vacation pracovní pobyt).
     public static int getNumberOfWorkingBookings(){
         int noOfWorkingBookings = 0;
         for (Booking booking : bookings) {
@@ -171,21 +166,16 @@ public class BookingManager {
         return noOfPrivateBookings;
     }
 
-    //Ve třídě BookingManager připrav metodu getAverageGuests. Metoda projde všechny rezervace a vrátí jako výsledek průměrný počet hostů na rezervaci.
-    // Asi není ideál, ale účel to splní
     public static double getAverageGuests(){
-        int maxBookingNumber = 0;
-
+        int noOfGuests = 0;
         for (Booking booking : bookings) {
-            maxBookingNumber = Math.max(maxBookingNumber,booking.getBookingNo());
+            noOfGuests += booking.getGuests().size();
         }
 
-        System.out.println("Celkový počet rezervací: " + maxBookingNumber);
-        System.out.println("Celkový počet záznamů : " + bookings.size());
+        System.out.println("Celkový počet rezervací: " + bookings.size());
+        System.out.println("Celkový počet hostů : " + noOfGuests);
 
-        return (double) bookings.size()/maxBookingNumber;
+        return (double) noOfGuests/bookings.size();
     }
-    //endregion
-
 }
 

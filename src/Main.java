@@ -1,5 +1,9 @@
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+import com.engeto.ja.hotel.Booking;
 import com.engeto.ja.hotel.TypeOfStay;
 import static com.engeto.ja.hotel.BookingManager.*;
 
@@ -25,44 +29,15 @@ public class Main {
         addBooking(5,"Josef","Vyskočil",LocalDate.of(1944, 7, 22));
         addBooking(5,"Lojza","Vopršálek",LocalDate.of(1965, 3, 14));
 
-        System.out.println("--------------------------------------------------------------------------------------");
-        System.out.println("Výpis všech vytvořených rezervací: ");
-        printBookings();
-
-        System.out.println("--------------------------------------------------------------------------------------");
-        System.out.println("Seznam všech hostů v systému: ");
-        getGuests();
-
-        //Úkol z 3. lekce
-        System.out.println("--------------------------------------------------------------------------------------");
-        System.out.println("Počet hostů s rezervací pracovnícho pobytu: " + getNumberOfWorkingBookings());
-        System.out.println("Počet hostů s rezervací soukromécho pobytu: " + getNumberOfPrivateBookings());
-        System.out.println("Průměrný počet hostů na rezervaci: " + String.format("%.2f",getAverageGuests()));
+        printAllBookingsStatistics();
 
         clearBookings();
 
         fillBookings();
 
-        System.out.println("--------------------------------------------------------------------------------------");
-        System.out.println("Počet rezervací pracovných pobytů: " + getNumberOfWorkingBookings());
+        printAllBookingsStatistics();
 
     }
-
-    /*Vytvoření testovacích dat
-    Ve třídě Main připrav metodu fillBookings s následujícím kódem:
-    V praxi bychom tato data získali od uživatele, nebo je načetli ze vstupního souboru či z databáze.
-    Vlož do evidence rezervací následující rezervace. Údaje, které chybí, si vymysli:
-
-    Karel Dvořák, narozen 15. 5. 1990, si rezervuje pokoj číslo 3 od 1. 6. 2023 do 7. 6. 2023. Bude to pracovní pobyt.
-    Jiný pan Karel Dvořák, narozen 3. 1. 1979, si rezervuje pokoj číslo 2 od 18. 7. 2023 do 21. 7. 2023. Bude to rekreační pobyt.
-
-    Fyzioterapeutka Karolína Tmavá si pro své klienty rezervuje pokoj číslo 2 na dvoudenní pobyty v měsíci srpnu. Vytvoř 10 dvoudenních rezervací pro rekreační pobyty:
-        První rezervace bude od 1. do 2. 8.,
-        druhá od 3. do 4. 8.
-        třetí od 5. do 6. 8.
-        a tak dále. Poslední rezervace bude od 19. do 20. 6. Karolína bude uvedena jako jediný host.
-    Fyzioterapeutka Karolína Tmavá z předchozího úkolu si dále rezervuje pokoj číslo 3 na celý srpen (od 1.8. do 31.8.).
-     */
 
     public static void fillBookings(){
         addBooking(3,"Karel","Dvořák",LocalDate.of(1990, 5, 15),
@@ -81,17 +56,106 @@ public class Main {
                     checkInDate, checkOutDate, TypeOfStay.PRIVATE);
         }
 
-        addBooking(1,"Karolína","Tmavá",LocalDate.of(1987, 4, 9),
+        addBooking(3,"Karolína","Tmavá",LocalDate.of(1987, 4, 9),
                 LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 31), TypeOfStay.BUSINESS);
     }
 
-    //V hlavní třídě projektu připrav metodu pro výpis seznam všech rezervací ve formátu:
-    //datumOd až datumDo: jméno hlavního hosta (datum narození)[počet hostů, výhledNaMoře ano/ne] za cena
+    public static void printAllBookings(){
+        List<Booking> bookings = getBookings();
+        for (Booking booking : bookings) {
+            System.out.println(getBookingFormated(booking));
+        }
+    }
 
-    //Připrav metodu pro výpis prvních 8 rezervací, které jsou určeny pro rekreaci (typ pobytu je rekreační). Pracovní pobyty při výpisu ignoruj/přeskoč.
-    //Můžeš ji také zobecnit a počet vypisovaných rezervací zadat jako parametr metody.
+    public static String getBookingFormated(Booking booking){
+        return booking.getCheckInDate().format(DateTimeFormatter.ofPattern("d.M.y")) + " až " +
+                    booking.getCheckOutDate().format(DateTimeFormatter.ofPattern("d.M.y")) + ": " +
+                    booking.getGuests().getFirst().toString() + " (" + booking.getGuests().size() + ", " +
+                    (booking.getRoom().hasSeaView() ? "ano" : "ne") + ") za " + booking.getPrice() + " CZK.";
+    }
 
-    //Připrav v hlavní třídě metodu printGuestStatistics, která vypíše:
-    //celkový počet rezervací s jedním/dvěma/více hosty.
+    public static void printPrivateBookings(int noOfBookings){
+        List<Booking> Bookings = getBookings();
+        int counter = 0;
+        for (Booking booking : Bookings) {
+            if(booking.getTypeOfStay() == TypeOfStay.PRIVATE){
+                System.out.println(getBookingFormated(booking));
+                counter++;
+            }
+            if(counter == noOfBookings){
+                break;
+            }
+        }
+    }
 
+    public static void printBusinessBookings(int noOfBookings){
+        List<Booking> Bookings = getBookings();
+        int counter = 0;
+        for (Booking booking : Bookings) {
+            if(booking.getTypeOfStay() == TypeOfStay.BUSINESS){
+                System.out.println(getBookingFormated(booking));
+                counter++;
+            }
+            if(counter == noOfBookings){
+                break;
+            }
+        }
+    }
+
+    public static void printGuestStatistics(){
+        List<Booking> Bookings = getBookings();
+        int oneGuest = 0;
+        int twoGuests = 0;
+        int moreGuests = 0;
+        for (Booking booking : Bookings) {
+            if(booking.getGuests().size() == 1){
+                oneGuest++;
+            } else if(booking.getGuests().size() == 2){
+                twoGuests++;
+            } else {
+                moreGuests++;
+            }
+        }
+        System.out.println("Počet rezervací s jedním hostem: " + oneGuest);
+        System.out.println("Počet rezervací se dvěma hosty: " + twoGuests);
+        System.out.println("Počet rezervací s více hosty: " + moreGuests);
+    }
+
+    public static double getAverageStayLenght(){
+        List<Booking> Bookings = getBookings();
+        int totalLenght = 0;
+        for (Booking booking : Bookings) {
+            totalLenght += booking.getBookingLength();
+        }
+        return (double) totalLenght/Bookings.size();
+    }
+
+    public static void printAllBookingsStatistics(){
+        String stringLine = "--------------------------------------------------------------------------------------";
+
+        System.out.println(stringLine);
+        System.out.println("Výpis všech vytvořených rezervací: ");
+        printAllBookings();
+
+        System.out.println(stringLine);
+        System.out.println("Seznam všech hostů: ");
+        getGuests();
+
+        System.out.println(stringLine);
+        System.out.println("Statistiky rezervací");
+        System.out.println("Průměrný počet hostů na rezervaci: " + String.format("%.2f",getAverageGuests()));
+        System.out.println("Počet rezervací pracovnícho pobytu: " + getNumberOfWorkingBookings());
+        System.out.println("Počet rezervací soukromého pobytu: " + getNumberOfPrivateBookings());
+        printGuestStatistics();
+        System.out.println("Průměrný délka pobytu: " + String.format("%.2f",getAverageStayLenght()));
+
+        System.out.println(stringLine);
+        System.out.println("Prvních 8 soukromých rezervací: ");
+        printPrivateBookings(8);
+
+        System.out.println(stringLine);
+        System.out.println("Prvních 8 pracovních rezervací: ");
+        printBusinessBookings(8);
+
+    }
 }

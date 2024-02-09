@@ -14,8 +14,7 @@ public class Booking {
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
     private TypeOfStay typeOfStay;
-    private long bookingLength;
-    private BigDecimal pricePerNight;
+    private int bookingLength;
     private BigDecimal totalPrice;
 
     private void setBookingNo(int bookingNo) {
@@ -49,8 +48,8 @@ public class Booking {
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.typeOfStay = typeOfStay;
-        this.bookingLength = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
-        this.pricePerNight = room.getPricePerNight();
+        this.bookingLength = (int) ChronoUnit.DAYS.between(checkInDate, checkOutDate);
+        BigDecimal pricePerNight = room.getPricePerNight();
         this.totalPrice = pricePerNight.multiply(BigDecimal.valueOf(bookingLength));
     }
 
@@ -90,13 +89,14 @@ public class Booking {
         return typeOfStay;
     }
 
+    public List<Guest> getGuests() {
+        return guests;
+    }
 
-    //Do třídy Booking přidej metodu getBookingLength, která bude vracet počet nocí pro danou rezervaci.
-    public long  getBookingLength(){
+    public int getBookingLength(){
         return bookingLength;
     }
 
-    //Přidej do třídy Booking metodu getPrice, která spočítá celkovou cenu objednávky.
     public BigDecimal getPrice(){
         return totalPrice;
     }

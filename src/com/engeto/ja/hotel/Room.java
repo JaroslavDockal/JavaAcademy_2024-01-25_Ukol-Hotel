@@ -9,7 +9,6 @@ public class Room {
     private boolean hasSeaView;
     private BigDecimal pricePerNight;
 
-    // region Setters
     private void setRoomNo(int roomNo) {
         this.roomNo = roomNo;
     }
@@ -37,9 +36,7 @@ public class Room {
         this.hasSeaView = hasSeaView;
         this.pricePerNight = BigDecimal.valueOf(pricePerNight);
     }
-    // endregion
 
-    // region Getters
     public int getRoomNo() {
         return roomNo;
     }
@@ -50,6 +47,10 @@ public class Room {
 
     public BigDecimal getPricePerNight() {
         return pricePerNight;
+    }
+
+    public boolean hasSeaView() {
+        return hasSeaView;
     }
 
     public Room getRoom() {
@@ -108,5 +109,4 @@ public class Room {
 
         return "Pokoj č. " + roomNo + ", " + noOfBeds + bedsStr + extraStr + pricePerNight.toString() + " CZK/noc." ;
     }
-    // endregion
 }

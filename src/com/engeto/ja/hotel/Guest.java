@@ -8,7 +8,6 @@ public class Guest {
     private String surname;
     private LocalDate dateOfBirth;
 
-    // region Setters
     private void setName(String name){
         this.name = name;
     }
@@ -24,21 +23,23 @@ public class Guest {
         this.surname = surname;
         this.dateOfBirth = dateOfBirth;
     }
-    // endregion
 
-    // region Getters
     public String getName() {
         return name;
     }
+
     public String getSurname() {
         return surname;
     }
+
     public String getFullName() {
         return name+" "+surname;
     }
+
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
+
     public Guest getGuest() {
         Guest guest = new Guest();
         guest.setName(name);
@@ -47,8 +48,8 @@ public class Guest {
 
         return guest;
     }
+
     @Override public String toString(){
-        return this.getFullName() + ", nar. " + dateOfBirth.format(DateTimeFormatter.ofPattern("d.M.y"));
+        return surname + " " + name + ", nar. " + dateOfBirth.format(DateTimeFormatter.ofPattern("d.M.y"));
     }
-    // endregion
 }
