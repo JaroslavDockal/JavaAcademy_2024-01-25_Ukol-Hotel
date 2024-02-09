@@ -8,4 +8,3 @@ Features:
 - Guest Management: Guests can be added and their details updated.
 - Room Availability: Users can check the availability of rooms for a given date range.
 - Reporting: Users can generate reports on reservations, rooms, and guests.
-- User Management: Users can be added, removed, and their details updated.
