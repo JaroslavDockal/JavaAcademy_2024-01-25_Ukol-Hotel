@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Booking {
+    // Private fields to store booking details
     private int bookingNo;
     private Room room;
     private List<Guest> guests = new ArrayList<>();
@@ -17,6 +18,7 @@ public class Booking {
     private int bookingLength;
     private BigDecimal totalPrice;
 
+    // Setter methods for private fields
     private void setBookingNo(int bookingNo) {
         this.bookingNo = bookingNo;
     }
@@ -41,6 +43,7 @@ public class Booking {
         this.typeOfStay = typeOfStay;
     }
 
+    // Method to set booking details
     public void setBooking(int bookingNo, Guest guest, Room room, LocalDate checkInDate, LocalDate checkOutDate, TypeOfStay typeOfStay) {
         this.bookingNo = bookingNo;
         this.guests.add(guest);
@@ -53,10 +56,12 @@ public class Booking {
         this.totalPrice = pricePerNight.multiply(BigDecimal.valueOf(bookingLength));
     }
 
+    // Method to add guest to the booking
     public void setBooking(Guest guest) {
         this.guests.add(guest);
     }
 
+    // Method to get a copy of the booking object
     public Booking getBooking() {
         Booking booking = new Booking();
         booking.setBookingNo(bookingNo);
@@ -69,6 +74,7 @@ public class Booking {
         return booking;
     }
 
+    // Getter methods for private fields
     public Room getRoom() {
         return room;
     }
@@ -101,6 +107,7 @@ public class Booking {
         return totalPrice;
     }
 
+    // Override toString method to generate a string representation of the booking
     @Override public String toString() {
         return "Rezervace č. " + bookingNo + ", " + checkInDate.format(DateTimeFormatter.ofPattern("d.M.y")) + " - " +
                 checkOutDate.format(DateTimeFormatter.ofPattern("d.M.y")) + ", " + guests.getFirst().toString() +", " + room.toString() +

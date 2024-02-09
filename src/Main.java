@@ -11,6 +11,7 @@ public class Main {
 
     public static void main(String[] args) {
 
+        // Adding various bookings
         addBooking(1,"Adéla","Malíková",LocalDate.of(1993, 3, 13),
                 LocalDate.of(2024, 7, 19), LocalDate.of(2024, 7, 26), TypeOfStay.BUSINESS);
 
@@ -29,16 +30,21 @@ public class Main {
         addBooking(5,"Josef","Vyskočil",LocalDate.of(1944, 7, 22));
         addBooking(5,"Lojza","Vopršálek",LocalDate.of(1965, 3, 14));
 
+        // Printing statistics of all bookings
         printAllBookingsStatistics();
 
+        // Clearing bookings
         clearBookings();
 
+        // Refilling bookings
         fillBookings();
 
+        // Printing statistics of all bookings after refilling
         printAllBookingsStatistics();
 
     }
 
+    // Method to fill bookings with predefined data
     public static void fillBookings(){
         addBooking(3,"Karel","Dvořák",LocalDate.of(1990, 5, 15),
                 LocalDate.of(2024, 6, 1), LocalDate.of(2024, 6, 7), TypeOfStay.BUSINESS);
@@ -60,6 +66,7 @@ public class Main {
                 LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 31), TypeOfStay.BUSINESS);
     }
 
+    // Method to print details of all bookings
     public static void printAllBookings(){
         List<Booking> bookings = getBookings();
         for (Booking booking : bookings) {
@@ -67,6 +74,7 @@ public class Main {
         }
     }
 
+    // Method to get formatted booking details
     public static String getBookingFormated(Booking booking){
         return booking.getCheckInDate().format(DateTimeFormatter.ofPattern("d.M.y")) + " až " +
                     booking.getCheckOutDate().format(DateTimeFormatter.ofPattern("d.M.y")) + ": " +
@@ -74,6 +82,7 @@ public class Main {
                     (booking.getRoom().hasSeaView() ? "ano" : "ne") + ") za " + booking.getPrice() + " CZK.";
     }
 
+    // Method to print details of private bookings
     public static void printPrivateBookings(int noOfBookings){
         List<Booking> Bookings = getBookings();
         int counter = 0;
@@ -88,6 +97,7 @@ public class Main {
         }
     }
 
+    // Method to print details of business bookings
     public static void printBusinessBookings(int noOfBookings){
         List<Booking> Bookings = getBookings();
         int counter = 0;
@@ -102,6 +112,7 @@ public class Main {
         }
     }
 
+    // Method to print guest statistics
     public static void printGuestStatistics(){
         List<Booking> Bookings = getBookings();
         int oneGuest = 0;
@@ -121,6 +132,7 @@ public class Main {
         System.out.println("Počet rezervací s více hosty: " + moreGuests);
     }
 
+    // Method to calculate average stay length
     public static double getAverageStayLenght(){
         List<Booking> Bookings = getBookings();
         int totalLenght = 0;
@@ -130,6 +142,7 @@ public class Main {
         return (double) totalLenght/Bookings.size();
     }
 
+    // Method to print statistics of all bookings
     public static void printAllBookingsStatistics(){
         String stringLine = "--------------------------------------------------------------------------------------";
 
@@ -147,7 +160,7 @@ public class Main {
         System.out.println("Počet rezervací pracovnícho pobytu: " + getNumberOfWorkingBookings());
         System.out.println("Počet rezervací soukromého pobytu: " + getNumberOfPrivateBookings());
         printGuestStatistics();
-        System.out.println("Průměrný délka pobytu: " + String.format("%.2f",getAverageStayLenght()));
+        System.out.println("Průměrná délka pobytu: " + String.format("%.2f",getAverageStayLenght()));
 
         System.out.println(stringLine);
         System.out.println("Prvních 8 soukromých rezervací: ");

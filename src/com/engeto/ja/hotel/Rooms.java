@@ -5,10 +5,13 @@ import java.util.List;
 
 public class Rooms {
 
+    // Method to create a list of rooms
     public static List<Room> createRooms() {
 
+        // Inicializace prázdného seznamu pokojů
         List<Room> rooms = new ArrayList<>();
 
+        // Initialize an empty list of rooms
         Room room1 = new Room();
         room1.setRoom(1, 2, true, true, 1000);
         rooms.add(room1);
@@ -51,9 +54,10 @@ public class Rooms {
 
         //printAllRooms(rooms);
 
-        return rooms;
+        return rooms; // Return the list of created rooms
     }
 
+    // Method to print all rooms in the list
     public static void printAllRooms(List<Room> rooms){
         System.out.println("--------------------------------------------------------------------------------------");
         System.out.println("Seznam dostupných pokojů: ");
@@ -63,19 +67,22 @@ public class Rooms {
         System.out.println("--------------------------------------------------------------------------------------");
     }
 
+    // Method to find a room by its number
     public static Room findRoomByNumber(List<Room> rooms, int roomNo) {
         for (Room room : rooms) {
             if (room.getRoomNo() == roomNo) {
                 return room;
             }
         }
-        return null;
+        return null; // Return null if room with the given number is not found
     }
 
+    // Method to check if a room is valid
     public static boolean roomIsValid(Room room){
-        return room != null;
+        return room != null; // A room is valid if it is not null
     }
 
+    // Method to return a validation status message for a room
     public static String roomValidationStatus(Room room, int roomNo){
         if (roomIsValid(room)) {
             return "Pokoj č. " + roomNo + " byl nalezen: " + room.getRoomSummary();

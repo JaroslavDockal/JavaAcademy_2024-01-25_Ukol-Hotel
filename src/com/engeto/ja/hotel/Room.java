@@ -3,12 +3,14 @@ package com.engeto.ja.hotel;
 import java.math.BigDecimal;
 
 public class Room {
+    // Private fields to store room details
     private int roomNo;
     private int noOfBeds;
     private boolean hasBalcony;
     private boolean hasSeaView;
     private BigDecimal pricePerNight;
 
+    // Setter methods for private fields
     private void setRoomNo(int roomNo) {
         this.roomNo = roomNo;
     }
@@ -29,6 +31,7 @@ public class Room {
         this.pricePerNight = pricePerNight;
     }
 
+    // Method to set room details
     public void setRoom(int roomNo, int noOfBeds, boolean hasBalcony, boolean hasSeaView,double pricePerNight){
         this.roomNo = roomNo;
         this.noOfBeds = noOfBeds;
@@ -37,6 +40,7 @@ public class Room {
         this.pricePerNight = BigDecimal.valueOf(pricePerNight);
     }
 
+    // Getter methods for private fields
     public int getRoomNo() {
         return roomNo;
     }
@@ -53,6 +57,7 @@ public class Room {
         return hasSeaView;
     }
 
+    // Method to get a copy of the room object
     public Room getRoom() {
         Room room = new Room();
         room.setRoomNo(roomNo);
@@ -64,9 +69,11 @@ public class Room {
         return room;
     }
 
+    // Method to generate a summary of the room
     public String getRoomSummary() {
         String extraStr;
         String bedsStr;
+        // Determine additional features of the room
         if (hasBalcony && hasSeaView) {
             extraStr = "Pokoj s balkónem a výhledem na moře, ";
         }else if(hasBalcony){
@@ -76,6 +83,7 @@ public class Room {
         }else{
             extraStr = "Pokoj bez balkónu a výhledu na moře, ";
         }
+        // Determine the bed configuration
         if (noOfBeds==1){
             bedsStr = " postel, ";
         } else if (noOfBeds <= 5){
@@ -87,9 +95,11 @@ public class Room {
         return extraStr + noOfBeds + bedsStr + pricePerNight.toString() + " CZK/noc.";
     }
 
+    // Override toString method to generate a string representation of the room
     @Override public String toString() {
         String extraStr;
         String bedsStr;
+        // Determine additional features of the room
         if (hasBalcony && hasSeaView) {
             extraStr = " s balkónem a výhledem na moře, ";
         }else if(hasBalcony){
@@ -99,6 +109,7 @@ public class Room {
         }else{
             extraStr = ", ";
         }
+        // Determine the bed configuration
         if (noOfBeds==1){
             bedsStr = " postel";
         } else if (noOfBeds <= 5){

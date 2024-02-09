@@ -4,10 +4,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class Guest {
+    // Private fields to store guest details
     private String name;
     private String surname;
     private LocalDate dateOfBirth;
 
+    // Setter methods for private fields
     private void setName(String name){
         this.name = name;
     }
@@ -18,12 +20,14 @@ public class Guest {
         this.dateOfBirth = dateOfBirth;
     }
 
+    // Method to set guest details
     public void setGuest(String name, String surname, LocalDate dateOfBirth){
         this.name = name;
         this.surname = surname;
         this.dateOfBirth = dateOfBirth;
     }
 
+    // Getter methods for private fields
     public String getName() {
         return name;
     }
@@ -40,6 +44,7 @@ public class Guest {
         return dateOfBirth;
     }
 
+    // Method to get a copy of the guest object
     public Guest getGuest() {
         Guest guest = new Guest();
         guest.setName(name);
@@ -49,6 +54,7 @@ public class Guest {
         return guest;
     }
 
+    // Override toString method to generate a string representation of the guest
     @Override public String toString(){
         return surname + " " + name + ", nar. " + dateOfBirth.format(DateTimeFormatter.ofPattern("d.M.y"));
     }
