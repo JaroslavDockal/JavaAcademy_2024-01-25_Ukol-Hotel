@@ -4,35 +4,14 @@ import java.math.BigDecimal;
 
 public class Room {
     // Private fields to store room details
-    private int roomNo;
-    private int noOfBeds;
-    private boolean hasBalcony;
-    private boolean hasSeaView;
-    private BigDecimal pricePerNight;
+    private final int roomNo;
+    private final int noOfBeds;
+    private final boolean hasBalcony;
+    private final boolean hasSeaView;
+    private final BigDecimal pricePerNight;
 
-    // Setter methods for private fields
-    private void setRoomNo(int roomNo) {
-        this.roomNo = roomNo;
-    }
-
-    private void setNoOfBeds(int noOfBeds) {
-        this.noOfBeds = noOfBeds;
-    }
-
-    private void setHasBalcony(boolean hasBalcony) {
-        this.hasBalcony = hasBalcony;
-    }
-
-    private void setHasSeaView(boolean hasSeaView) {
-        this.hasSeaView = hasSeaView;
-    }
-
-    private void setPricePerNight(BigDecimal pricePerNight) {
-        this.pricePerNight = pricePerNight;
-    }
-
-    // Method to set room details
-    public void setRoom(int roomNo, int noOfBeds, boolean hasBalcony, boolean hasSeaView,double pricePerNight){
+    // Constructor to initialize the room details
+    public Room(int roomNo, int noOfBeds, boolean hasBalcony, boolean hasSeaView,double pricePerNight){
         this.roomNo = roomNo;
         this.noOfBeds = noOfBeds;
         this.hasBalcony = hasBalcony;
@@ -57,45 +36,7 @@ public class Room {
         return hasSeaView;
     }
 
-    // Method to get a copy of the room object
-    public Room getRoom() {
-        Room room = new Room();
-        room.setRoomNo(roomNo);
-        room.setNoOfBeds(noOfBeds);
-        room.setHasBalcony(hasBalcony);
-        room.setHasSeaView(hasSeaView);
-        room.setPricePerNight(pricePerNight);
-
-        return room;
-    }
-
-    // Method to generate a summary of the room
-    public String getRoomSummary() {
-        String extraStr;
-        String bedsStr;
-        // Determine additional features of the room
-        if (hasBalcony && hasSeaView) {
-            extraStr = "Pokoj s balkónem a výhledem na moře, ";
-        }else if(hasBalcony){
-            extraStr = "Pokoj s balkónem bez výhledu na moře, ";
-        }else if(hasSeaView){
-            extraStr = "Pokoj s výhledem na moře bez balkónu, ";
-        }else{
-            extraStr = "Pokoj bez balkónu a výhledu na moře, ";
-        }
-        // Determine the bed configuration
-        if (noOfBeds==1){
-            bedsStr = " postel, ";
-        } else if (noOfBeds <= 5){
-            bedsStr = " postele, ";
-        } else {
-            bedsStr = " postelí, ";
-        }
-
-        return extraStr + noOfBeds + bedsStr + pricePerNight.toString() + " CZK/noc.";
-    }
-
-    // Override toString method to generate a string representation of the room
+    // Override toString method to generate a summary of the room as a string
     @Override public String toString() {
         String extraStr;
         String bedsStr;

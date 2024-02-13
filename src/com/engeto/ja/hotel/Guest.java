@@ -2,26 +2,16 @@ package com.engeto.ja.hotel;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 public class Guest {
     // Private fields to store guest details
-    private String name;
-    private String surname;
-    private LocalDate dateOfBirth;
+    private final String name;
+    private final String surname;
+    private final LocalDate dateOfBirth;
 
-    // Setter methods for private fields
-    private void setName(String name){
-        this.name = name;
-    }
-    private void setSurname(String surname){
-        this.surname = surname;
-    }
-    private void setDateOfBirth(LocalDate dateOfBirth){
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    // Method to set guest details
-    public void setGuest(String name, String surname, LocalDate dateOfBirth){
+    // Constructor for the guest
+    public Guest(String name, String surname, LocalDate dateOfBirth){
         this.name = name;
         this.surname = surname;
         this.dateOfBirth = dateOfBirth;
@@ -44,18 +34,23 @@ public class Guest {
         return dateOfBirth;
     }
 
-    // Method to get a copy of the guest object
-    public Guest getGuest() {
-        Guest guest = new Guest();
-        guest.setName(name);
-        guest.setSurname(surname);
-        guest.setDateOfBirth(dateOfBirth);
-
-        return guest;
-    }
 
     // Override toString method to generate a string representation of the guest
     @Override public String toString(){
-        return surname + " " + name + ", nar. " + dateOfBirth.format(DateTimeFormatter.ofPattern("d.M.y"));
+        return surname + " " + name + ", nar. " + dateOfBirth.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    }
+
+    // Override equals and hashCode methods for proper comparison and hash calculation
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Guest guest = (Guest) o;
+        return Objects.equals(name, guest.name) &&
+                Objects.equals(surname, guest.surname) &&
+                Objects.equals(dateOfBirth, guest.dateOfBirth);
+    }
+
+    @Override public int hashCode() {
+        return Objects.hash(name, surname, dateOfBirth);
     }
 }
